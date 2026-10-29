@@ -1,0 +1,34 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bell Proof – flicker screenshot test</title>
+<style>body{font-family:system-ui,Arial;background:#f4f5fa;color:#1A2B8F;margin:0;padding:12px;text-align:center}
+canvas{max-width:100%;height:auto;border:3px solid #FFD23C;border-radius:8px;background:#000}
+.box{max-width:640px;margin:0 auto}.ctl{background:#fff;border-radius:8px;padding:10px;margin:10px 0;text-align:left;font-size:15px;color:#222}
+label{display:block;margin:6px 0}button{background:#1A2B8F;color:#fff;border:0;border-radius:6px;padding:8px 12px;margin:4px;font-size:15px}
+.warn{font-size:13px;color:#8a5a00}</style></head><body><div class="box">
+<h2>Bell Proof – flicker test</h2>
+<canvas id="c"></canvas>
+<div class="ctl">
+<label>Pattern strength: <b id="av">40</b> <input id="amp" type="range" min="0" max="90" value="40" style="width:60%"></label>
+<label><input id="on" type="checkbox" checked> Flicker on</label>
+<button id="fa">Show what a screenshot sees (frame A)</button><button id="fb">Frame B</button><button id="run">Resume flicker</button>
+<div>Screen refresh measured: <b id="fps">…</b> fps</div>
+<p>How to test: look at the photo with flicker on. It should look like a normal v4 proof. Then take a real screenshot (phone or PC) and look at it.</p>
+<p class="warn">⚠️ Test image is an AI-generated child, not a real student. If you are sensitive to flashing lights, keep strength low.</p>
+</div></div>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d',{willReadFrequently:true});
+const bi=new Image(),pi=new Image();let A,B,base,pat,mode='run',f=0,last=performance.now(),cnt=0;
+function load(i,s){return new Promise(r=>{i.onload=r;i.src=s})}
+Promise.all([load(bi,'base.jpg?v=2'),load(pi,'pattern.png?v=2')]).then(()=>{
+ c.width=bi.width;c.height=bi.height;x.drawImage(bi,0,0);base=x.getImageData(0,0,c.width,c.height);
+ x.drawImage(pi,0,0);pat=x.getImageData(0,0,c.width,c.height);build();requestAnimationFrame(tick)});
+function build(){const a=+amp.value;av.textContent=a;A=new ImageData(c.width,c.height);B=new ImageData(c.width,c.height);
+ const b=base.data,p=pat.data,da=A.data,db=B.data;
+ for(let i=0;i<b.length;i+=4){const s=(p[i]-128)/127*a;for(let k=0;k<3;k++){da[i+k]=b[i+k]+s;db[i+k]=b[i+k]-s}da[i+3]=db[i+3]=255}}
+amp.oninput=build;
+fa.onclick=()=>mode='A';fb.onclick=()=>mode='B';run.onclick=()=>mode='run';
+function tick(t){cnt++;if(t-last>1000){fps.textContent=Math.round(cnt*1000/(t-last));cnt=0;last=t}
+ if(mode==='A')x.putImageData(A,0,0);else if(mode==='B')x.putImageData(B,0,0);
+ else if(!on.checked)x.putImageData(base,0,0);else{f^=1;x.putImageData(f?A:B,0,0)}
+ requestAnimationFrame(tick)}
+</script></body></html>
