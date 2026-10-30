@@ -1,0 +1,70 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FLATTENED (flatB)</title>
+<link href="MudBlazor.min.css" rel="stylesheet" />
+<link href="after_BeginOrder.css" rel="stylesheet" />
+<link href="after_BeginOrderBellPhotos.css" rel="stylesheet" />
+<link href="YBApparel.css" rel="stylesheet" />
+<link href="after_BellPhotoPackageInfoPopup.css" rel="stylesheet" />
+<style>
+ body { margin: 0; background: #eee; font-family: system-ui; }
+ .mud-dialog { margin: 16px auto; max-width: 1100px; background: #fff; }
+ #tag { position: fixed; top: 4px; right: 8px; font: 700 14px system-ui; color: #c00; z-index: 99; }
+ .tiles { max-width: 1100px; margin: 0 auto 16px; background: #fff; padding: 12px; }
+</style></head><body>
+<div id="tag">FLATTENED (flatB)</div>
+<div class="order-page tiles">
+ <div class="image-gallery" style="--gallery-columns: 3;">
+  <button class="image-tile" type="button">
+   <span class="image-stage" id="tile-stage">
+    <img alt="student" src="flatB.jpg" class="gallery-image" />
+   </span>
+  </button>
+ </div>
+</div>
+<div class="mud-dialog store-product-dialog store-dialog store-product-dialog--expanded">
+ <div class="mud-dialog-content"><div class="store-modal-content">
+  <div class="mud-paper mud-elevation-0 store-product-card store-card">
+   <div class="mud-grid mud-grid-spacing-xs-3 store-product-grid">
+    <div class="mud-grid-item mud-grid-item-xs-12 store-preview-column">
+     <div class="store-preview-frame">
+      <span class="store-preview-label">Preview</span>
+      <div class="store-main-image-shell">
+        <img src="flatB.jpg" alt="student" decoding="async" class="store-product-image store-preview-flat" />
+       </div>
+     </div>
+    </div>
+    <div class="mud-grid-item mud-grid-item-xs-12 store-options-column">
+     <div style="height:420px;background:#f4f6fb;border:1px solid #ccd">options column</div>
+    </div>
+   </div>
+  </div>
+ </div></div>
+</div>
+<script>
+ window.measure = () => {
+   const R = b => ({x: Math.round(b.x), y: Math.round(b.y), w: Math.round(b.w), h: Math.round(b.h)});
+   const painted = img => {
+     if (!img) return null;
+     const b = img.getBoundingClientRect(), cs = getComputedStyle(img);
+     if (cs.visibility === 'hidden' || cs.display === 'none') return null;
+     const nw = img.naturalWidth, nh = img.naturalHeight;
+     let w = b.width, h = b.height;
+     if (nw && (cs.objectFit === 'contain' || cs.objectFit === 'scale-down')) {
+       const s = Math.min(b.width / nw, b.height / nh); w = nw * s; h = nh * s; }
+     return R({x: b.x + (b.width - w) / 2, y: b.y + (b.height - h) / 2, w, h});
+   };
+   const paintedBg = (fg, bgImg) => {
+     if (fg && getComputedStyle(fg).backgroundImage !== 'none') {
+       const b = fg.getBoundingClientRect(); return R({x: b.x, y: b.y, w: b.width, h: b.height}); }
+     return painted(bgImg);
+   };
+   const q = s => document.querySelector(s);
+   const pFg = q('.store-preview-foreground'), tFg = q('#tile-stage .foreground-image');
+   return {
+     popupFg: painted(q('.store-preview-flat')), popupBg: null,
+     tileFg: painted(q('#tile-stage .gallery-image')), tileBg: null,
+     natural: [q('.store-preview-flat').naturalWidth, q('.store-preview-flat').naturalHeight],
+   };
+ };
+</script></body></html>
