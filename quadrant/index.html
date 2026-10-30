@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Four-corner reveal - demo</title>
+<style>
+ body { margin: 0; font-family: system-ui, sans-serif; background: #f2f3f8; color: #1a1a2e; }
+ main { max-width: 760px; margin: 0 auto; padding: 24px 16px 40px; }
+ h1 { font-size: 20px; color: #1A2B8F; margin: 0 0 4px; }
+ p { margin: 6px 0 14px; line-height: 1.45; }
+ .stage { --h: min(70vh, 520px); height: var(--h); aspect-ratio: 480 / 583; margin: 0 auto;
+          display: grid; grid-template-columns: 216fr 48fr 216fr; grid-template-rows: 267fr 48fr 268fr;
+          background: #1A2B8F; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 24px rgba(26,43,143,.25);
+          user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+ .q { position: relative; overflow: hidden; cursor: zoom-in; }
+ .q img { display: block; width: 100%; height: 100%; object-fit: fill; pointer-events: none; -webkit-user-drag: none; }
+ .q.on { cursor: default; outline: 2px solid #FFD23C; outline-offset: -2px; }
+ .tl { grid-area: 1 / 1; } .tr { grid-area: 1 / 3; } .bl { grid-area: 3 / 1; } .br { grid-area: 3 / 3; }
+ .bar { display: grid; place-items: center; color: #FFD23C; font: 700 10px system-ui; letter-spacing: .12em; }
+ .vbar { grid-area: 1 / 2 / 4 / 3; writing-mode: vertical-rl; }
+ .hbar { grid-area: 2 / 1 / 3 / 4; }
+ .note { font-size: 13px; color: #555; text-align: center; margin-top: 10px; }
+</style></head><body><main>
+<h1>Four-corner reveal (demo)</h1>
+<p>Hover a corner (or tap it on a phone) to see that corner clearly. Only one corner is clear at a time, and
+the blue cross down the middle is never sent to the browser at all.</p>
+<div class="stage" id="stage">
+  <div class="q tl" data-k="tl"><img alt="" src="tl_hidden.jpg"></div>
+  <div class="bar vbar">BELL PHOTOGRAPHERS</div>
+  <div class="q tr" data-k="tr"><img alt="" src="tr_hidden.jpg"></div>
+  <div class="bar hbar">PROOF</div>
+  <div class="q bl" data-k="bl"><img alt="" src="bl_hidden.jpg"></div>
+  <div class="q br" data-k="br"><img alt="" src="br_hidden.jpg"></div>
+</div>
+<div class="note">Clear corners load only when you point at them (watch the Network tab).</div>
+</main>
+<script>
+ const qs = [...document.querySelectorAll('.q')];
+ function show(q) {
+   qs.forEach(o => { const on = o === q; o.classList.toggle('on', on);
+     o.querySelector('img').src = on ? o.dataset.k + '.jpg' : o.dataset.k + '_hidden.jpg'; });
+ }
+ qs.forEach(q => {
+   q.addEventListener('mouseenter', () => show(q));
+   q.addEventListener('touchstart', e => { e.preventDefault(); show(q); }, { passive: false });
+ });
+ document.getElementById('stage').addEventListener('mouseleave', () => show(null));
+ document.addEventListener('contextmenu', e => { if (e.target.closest('.stage')) e.preventDefault(); });
+</script></body></html>
