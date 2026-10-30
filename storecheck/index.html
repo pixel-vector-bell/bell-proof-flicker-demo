@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8">
+<title>proof flicker check</title>
+<link href="ProofFlicker.css" rel="stylesheet" />
+<style>
+/* the store's real .image-stage / .gallery-image rules, copied from BeginOrderBellPhotos.css */
+.image-stage{position:relative;display:block;width:420px;height:510px;overflow:hidden;background:#fff;border-radius:8px}
+.gallery-image{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;object-position:center}
+body{font-family:system-ui;margin:16px}
+</style></head><body>
+<h3>proof tile (flicker)</h3>
+<span class="image-stage">
+  <img alt="newgirl" src="prod_newgirl_A.jpg" class="gallery-image" />
+  <img alt="" aria-hidden="true" src="prod_newgirl_B.jpg" class="gallery-image proof-frame-b" />
+</span>
+<script src="proofFlicker.js"></script>
+</body></html>

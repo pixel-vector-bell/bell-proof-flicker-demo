@@ -1,0 +1,31 @@
+/* Customer proof watermark - the hidden screenshot layer.
+   Two frames are stacked in the same .image-stage: frame A (the proof plus the hidden
+   collage) and frame B (the proof minus it). Averaging them gives the plain proof back.
+
+   No JavaScript / reduced motion: frame B sits at 50% opacity, which composites to exactly
+   (A + B) / 2 = the plain proof. The customer always sees a correct image.
+   With JavaScript: proofFlicker.js alternates frame B between fully visible and fully hidden
+   each animation frame, so the eye blends them while any single screenshot catches one frame. */
+
+.proof-frame-b {
+    z-index: 2;
+    opacity: 0.5;
+    /* The browser must not fade between the two frames - the swap has to be instant. */
+    transition: none !important;
+}
+
+.proof-flicker-active .proof-frame-b {
+    opacity: 1;
+}
+
+.proof-flicker-active .proof-frame-b[data-proof-hidden="1"] {
+    opacity: 0;
+}
+
+/* A customer who asks the OS for reduced motion keeps the blended still image. */
+@media (prefers-reduced-motion: reduce) {
+    .proof-flicker-active .proof-frame-b,
+    .proof-flicker-active .proof-frame-b[data-proof-hidden="1"] {
+        opacity: 0.5;
+    }
+}
