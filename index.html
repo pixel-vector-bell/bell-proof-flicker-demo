@@ -20,9 +20,9 @@ label{display:block;margin:6px 0}button{background:#1A2B8F;color:#fff;border:0;b
 const c=document.getElementById('c'),x=c.getContext('2d',{willReadFrequently:true});
 const bi=new Image(),pi=new Image();let A,B,base,pat,mode='run',f=0,last=performance.now(),cnt=0;
 function load(i,s){return new Promise(r=>{i.onload=r;i.src=s})}
-function loadPat(){return load(pi,pt.value+'?v=3').then(()=>{x.drawImage(pi,0,0);pat=x.getImageData(0,0,c.width,c.height);build()})}
+function loadPat(){return load(pi,pt.value+'?v=4').then(()=>{x.drawImage(pi,0,0);pat=x.getImageData(0,0,c.width,c.height);build()})}
 pt.onchange=loadPat;
-load(bi,'base.jpg?v=3').then(()=>{c.width=bi.width;c.height=bi.height;x.drawImage(bi,0,0);base=x.getImageData(0,0,c.width,c.height);return loadPat()}).then(()=>requestAnimationFrame(tick));
+load(bi,'base.jpg?v=4').then(()=>{c.width=bi.width;c.height=bi.height;x.drawImage(bi,0,0);base=x.getImageData(0,0,c.width,c.height);return loadPat()}).then(()=>requestAnimationFrame(tick));
 function build(){const a=+amp.value;av.textContent=a;A=new ImageData(c.width,c.height);B=new ImageData(c.width,c.height);
  const b=base.data,p=pat.data,da=A.data,db=B.data;
  for(let i=0;i<b.length;i+=4){for(let k=0;k<3;k++){const s=(p[i+k]-128)/127*a;da[i+k]=b[i+k]+s;db[i+k]=b[i+k]-s}da[i+3]=db[i+3]=255}}
