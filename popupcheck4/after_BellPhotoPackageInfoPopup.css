@@ -382,6 +382,23 @@
     background-repeat: no-repeat;
 }
 
+/* Background projects flattened on the SERVER (student + background + watermark are one JPEG).
+   Sized exactly like the layered student above: its own shape, capped by the frame on both axes,
+   centred. Scoped to 0,4,1 so it beats PackageOptionPopupYBApparel.css's !important
+   `.store-product-dialog .store-preview-frame img` (0,2,1: height auto), which otherwise made
+   the picture taller than the frame and cropped off the bottom. */
+.store-product-dialog .store-preview-frame .store-main-image-shell > img.store-preview-flat {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    margin: auto !important;
+    object-fit: fill !important;
+}
+
 
 /* ==========================================================================
        IMAGE LOADING
