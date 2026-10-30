@@ -8,7 +8,8 @@ label{display:block;margin:6px 0}button{background:#1A2B8F;color:#fff;border:0;b
 <h2>Bell Proof – flicker test</h2>
 <canvas id="c"></canvas>
 <div class="ctl">
-<label>Pattern strength: <b id="av">40</b> <input id="amp" type="range" min="0" max="90" value="40" style="width:60%"></label>
+<label>Pattern strength: <b id="av">55</b> <input id="amp" type="range" min="0" max="90" value="55" style="width:60%"></label>
+<label>Hidden layer: <select id="pt"><option value="pattern_scramble.png">Scrambled photo tiles (stronger vs AI)</option><option value="pattern.png">BELL PROOF text</option></select></label>
 <label><input id="on" type="checkbox" checked> Flicker on</label>
 <button id="fa">Show what a screenshot sees (frame A)</button><button id="fb">Frame B</button><button id="run">Resume flicker</button>
 <div>Screen refresh measured: <b id="fps">…</b> fps</div>
@@ -19,12 +20,12 @@ label{display:block;margin:6px 0}button{background:#1A2B8F;color:#fff;border:0;b
 const c=document.getElementById('c'),x=c.getContext('2d',{willReadFrequently:true});
 const bi=new Image(),pi=new Image();let A,B,base,pat,mode='run',f=0,last=performance.now(),cnt=0;
 function load(i,s){return new Promise(r=>{i.onload=r;i.src=s})}
-Promise.all([load(bi,'base.jpg?v=2'),load(pi,'pattern.png?v=2')]).then(()=>{
- c.width=bi.width;c.height=bi.height;x.drawImage(bi,0,0);base=x.getImageData(0,0,c.width,c.height);
- x.drawImage(pi,0,0);pat=x.getImageData(0,0,c.width,c.height);build();requestAnimationFrame(tick)});
+function loadPat(){return load(pi,pt.value+'?v=3').then(()=>{x.drawImage(pi,0,0);pat=x.getImageData(0,0,c.width,c.height);build()})}
+pt.onchange=loadPat;
+load(bi,'base.jpg?v=3').then(()=>{c.width=bi.width;c.height=bi.height;x.drawImage(bi,0,0);base=x.getImageData(0,0,c.width,c.height);return loadPat()}).then(()=>requestAnimationFrame(tick));
 function build(){const a=+amp.value;av.textContent=a;A=new ImageData(c.width,c.height);B=new ImageData(c.width,c.height);
  const b=base.data,p=pat.data,da=A.data,db=B.data;
- for(let i=0;i<b.length;i+=4){const s=(p[i]-128)/127*a;for(let k=0;k<3;k++){da[i+k]=b[i+k]+s;db[i+k]=b[i+k]-s}da[i+3]=db[i+3]=255}}
+ for(let i=0;i<b.length;i+=4){for(let k=0;k<3;k++){const s=(p[i+k]-128)/127*a;da[i+k]=b[i+k]+s;db[i+k]=b[i+k]-s}da[i+3]=db[i+3]=255}}
 amp.oninput=build;
 fa.onclick=()=>mode='A';fb.onclick=()=>mode='B';run.onclick=()=>mode='run';
 function tick(t){cnt++;if(t-last>1000){fps.textContent=Math.round(cnt*1000/(t-last));cnt=0;last=t}
